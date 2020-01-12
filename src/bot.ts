@@ -6,6 +6,7 @@ import { Guild, SnowflakeUtil } from 'discord.js';
 import sqlite from 'sqlite';
 import path from 'path';
 import { stripIndents } from 'common-tags';
+import { CronJob } from 'cron';
 
 import logger, { getLogTag } from './helpers/logger';
 import { CMD_PREFIX, CMD_GROUPS, DISCORD_BOT_TOKEN } from './helpers/constants';
@@ -128,3 +129,34 @@ bot.on('commandError', (command: Command, err: Error, message: CommandoMessage) 
 
 // Start the bot
 bot.login(DISCORD_BOT_TOKEN);
+
+/**
+ * Daily administrative tasks
+ *
+ * Current execution time: 12:05am
+ */
+const jobDailyTasks = new CronJob('5 0 * * *', function () {
+  const tag = getLogTag(SnowflakeUtil.generate());
+  logger.info(tag, 'Executing daily tasks');
+
+  // Update homepage member counts
+  updateHomepageMemberCounts(tag, bot);
+}, undefined, false, 'America/Los_Angeles');
+jobDailyTasks.start();
+
+/**
+ * Monthly administrative tasks
+ *
+ * Current execution time: 1st of the month @ 12:10am
+ */
+const jobMonthlyTasks = new CronJob('10 0 1 * *', function () {
+  const tag = getLogTag(SnowflakeUtil.generate());
+  logger.info(tag, 'Executing monthly tasks');
+
+  // Update blacklist with last month's permabans
+  // TODO
+
+  // Remove bot from idle servers (ones not enrolled in GDN)
+  // TODO
+}, undefined, false, 'America/Los_Angeles');
+jobMonthlyTasks.start();
