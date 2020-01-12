@@ -2,7 +2,7 @@
 import dotenv from 'dotenv';
 
 import { CommandoClient, SQLiteProvider, Command, CommandoMessage } from 'discord.js-commando';
-import { Guild, SnowflakeUtil } from 'discord.js';
+import { Guild } from 'discord.js';
 import sqlite from 'sqlite';
 import path from 'path';
 import { stripIndents } from 'common-tags';
@@ -104,7 +104,7 @@ bot.on('error', (err) => {
 
 // When the bot joins a Guild
 bot.on('guildCreate', (guild: Guild) => {
-  const tag = getLogTag(SnowflakeUtil.generate());
+  const tag = getLogTag();
 
   logger.info(`Joined guild ${guild.name} (${guild.id})`);
   updateServerCountActivity(tag, bot);
@@ -112,7 +112,7 @@ bot.on('guildCreate', (guild: Guild) => {
 
 // When the bot leaves a Guild
 bot.on('guildDelete', (guild: Guild) => {
-  const tag = getLogTag(SnowflakeUtil.generate());
+  const tag = getLogTag();
 
   logger.info(tag, `Left guild ${guild.name} (${guild.id})`);
 
@@ -136,7 +136,7 @@ bot.login(DISCORD_BOT_TOKEN);
  * Current execution time: 12:05am
  */
 const jobDailyTasks = new CronJob('5 0 * * *', function () {
-  const tag = getLogTag(SnowflakeUtil.generate());
+  const tag = getLogTag();
   logger.info(tag, 'Executing daily tasks');
 
   // Update homepage member counts
@@ -150,7 +150,7 @@ jobDailyTasks.start();
  * Current execution time: 1st of the month @ 12:10am
  */
 const jobMonthlyTasks = new CronJob('10 0 1 * *', function () {
-  const tag = getLogTag(SnowflakeUtil.generate());
+  const tag = getLogTag();
   logger.info(tag, 'Executing monthly tasks');
 
   // Update blacklist with last month's permabans

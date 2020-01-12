@@ -1,4 +1,4 @@
-import { SnowflakeUtil, GuildMember } from 'discord.js';
+import { GuildMember } from 'discord.js';
 
 import logger, { getLogTag } from '../helpers/logger';
 
@@ -11,10 +11,7 @@ import addRoleAndLog from '../helpers/auth/addRoleAndLog';
 export default function autoAuth (member: GuildMember) {
   const { guild } = member;
 
-  // Generate a snowflake since we won't get one here from Discord
-  const eventId = SnowflakeUtil.generate();
-  // Generate a logging tag with the snowflake
-  const tag = getLogTag(eventId);
+  const tag = getLogTag();
 
   logger.info(tag, `[EVENT START: User joined ${guild.name}]`);
 
