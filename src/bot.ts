@@ -15,7 +15,6 @@ import autoAuth from './eventHandlers/autoAuth';
 import updateServerCountActivity from './eventHandlers/updateServerCountActivity';
 import {
   updateHomepageMemberCounts,
-  UPDATE_INTERVAL,
 } from './eventHandlers/updateHomepageMemberCounts';
 import removeGuildFromGDN from './eventHandlers/removeGuildFromGDN';
 
@@ -126,14 +125,6 @@ bot.on('guildMemberAdd', autoAuth);
 bot.on('commandError', (command: Command, err: Error, message: CommandoMessage) => {
   message.channel.stopTyping();
 });
-
-// Update server member counts on the GDN Homepage
-bot.setInterval(
-  () => {
-    updateHomepageMemberCounts(bot);
-  },
-  UPDATE_INTERVAL,
-);
 
 // Start the bot
 bot.login(DISCORD_BOT_TOKEN);
