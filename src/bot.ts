@@ -12,12 +12,12 @@ import logger, { getLogTag } from './helpers/logger';
 import { CMD_PREFIX, CMD_GROUPS, DISCORD_BOT_TOKEN } from './helpers/constants';
 
 // Event handlers
-import autoAuth from './eventHandlers/autoAuth';
-import updateServerCountActivity from './eventHandlers/updateServerCountActivity';
+import autoAuth from './tasks/autoAuth';
+import updateServerCountActivity from './tasks/updateServerCountActivity';
 import {
   updateHomepageMemberCounts,
-} from './eventHandlers/updateHomepageMemberCounts';
-import removeGuildFromGDN from './eventHandlers/removeGuildFromGDN';
+} from './tasks/updateHomepageMemberCounts';
+import removeGuildFromGDN from './tasks/removeGuildFromGDN';
 
 dotenv.config();
 
