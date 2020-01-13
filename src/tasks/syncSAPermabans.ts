@@ -79,8 +79,7 @@ export default async function syncSAPermabans (
 
   // Request permaban HTML
   const { data: permabanHTML } = await axiosSA.get(
-    /* eslint-disable-next-line max-len */
-    `https://forums.somethingawful.com/banlist.php?adminid=&actfilt=9&ban_month=${month}&ban_year=${year}`,
+    `https://forums.somethingawful.com/banlist.php?actfilt=9&ban_month=${month}&ban_year=${year}`,
   );
 
   const $ = cheerio.load(permabanHTML);
