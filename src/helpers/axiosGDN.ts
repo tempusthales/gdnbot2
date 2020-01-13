@@ -47,4 +47,5 @@ export const GDN_URLS = {
   MEMBERS: '/gdn/members',
   GUILDS: '/gdn/servers',
   SA: '/gdn/sa',
+  PERMABAN: '/gdn/sa/permabansync',
 };
