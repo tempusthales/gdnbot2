@@ -19,6 +19,7 @@ import {
 } from './tasks/updateHomepageMemberCounts';
 import removeGuildFromGDN from './tasks/removeGuildFromGDN';
 import syncSAPermabans from './tasks/syncSAPermabans';
+import leaveIdleServers from './tasks/leaveIdleServers';
 
 dotenv.config();
 
@@ -139,7 +140,7 @@ const jobDailyTasks = new CronJob('5 0 * * *', function () {
   logger.info(tag, 'Executing daily tasks');
 
   // Remove bot from idle servers (ones not enrolled in GDN)
-  // TODO
+  leaveIdleServers(tag, bot);
 
   // Update homepage member counts
   updateHomepageMemberCounts(tag, bot);
