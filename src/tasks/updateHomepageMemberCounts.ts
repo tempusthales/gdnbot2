@@ -10,7 +10,7 @@ interface GuildsMap {
 }
 
 export async function updateHomepageMemberCounts (tag: LogTag, bot: CommandoClient) {
-  logger.info(tag, '[Updating member counts]');
+  logger.info(tag, '[TASK START] Updating homepage member counts');
 
   try {
     // Get the list of enrolled servers from the back end
