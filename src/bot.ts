@@ -138,6 +138,9 @@ const jobDailyTasks = new CronJob('5 0 * * *', function () {
   const tag = getLogTag();
   logger.info(tag, 'Executing daily tasks');
 
+  // Remove bot from idle servers (ones not enrolled in GDN)
+  // TODO
+
   // Update homepage member counts
   updateHomepageMemberCounts(tag, bot);
 }, undefined, false, 'America/Los_Angeles');
@@ -154,8 +157,5 @@ const jobMonthlyTasks = new CronJob('10 0 1 * *', function () {
 
   // Update blacklist with last month's permabans
   syncSAPermabans(tag);
-
-  // Remove bot from idle servers (ones not enrolled in GDN)
-  // TODO
 }, undefined, false, 'America/Los_Angeles');
 jobMonthlyTasks.start();
