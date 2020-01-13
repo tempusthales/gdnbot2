@@ -66,6 +66,8 @@ export default async function syncSAPermabans (
   month?: number,
   year?: number,
 ): Promise<void> {
+  logger.info(tag, `[TASK START] Syncing SA permabans for ${month}/${year}`);
+
   // Default to calculating last month and year if one isn't specified
   if (!month || !year) {
     logger.warn(tag, `No month (${month}) and/or year (${year}) specified`);
@@ -74,8 +76,6 @@ export default async function syncSAPermabans (
     month = lastMonth.month;
     year = lastMonth.year;
   }
-
-  logger.info(tag, `[TASK START] Syncing SA permabans for ${month}/${year}`);
 
   // Request permaban HTML
   const { data: permabanHTML } = await axiosSA.get(
