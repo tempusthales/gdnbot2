@@ -84,8 +84,6 @@ bot.once('ready', () => {
 
   // Update bot activity to reflect number of guilds
   updateServerCountActivity(tag, bot);
-  // Update homepage server counts on boot
-  updateHomepageMemberCounts(tag, bot);
 });
 
 // Handle errors
