@@ -18,6 +18,7 @@ import {
   updateHomepageMemberCounts,
 } from './tasks/updateHomepageMemberCounts';
 import removeGuildFromGDN from './tasks/removeGuildFromGDN';
+import syncSAPermabans from './tasks/syncSAPermabans';
 
 dotenv.config();
 
@@ -152,7 +153,7 @@ const jobMonthlyTasks = new CronJob('10 0 1 * *', function () {
   logger.info(tag, 'Executing monthly tasks');
 
   // Update blacklist with last month's permabans
-  // TODO
+  syncSAPermabans(tag);
 
   // Remove bot from idle servers (ones not enrolled in GDN)
   // TODO
