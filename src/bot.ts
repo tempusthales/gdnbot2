@@ -2,22 +2,24 @@
 import dotenv from 'dotenv';
 
 import { CommandoClient, SQLiteProvider, Command, CommandoMessage } from 'discord.js-commando';
-import { Guild, SnowflakeUtil } from 'discord.js';
+import { Guild } from 'discord.js';
 import sqlite from 'sqlite';
 import path from 'path';
 import { stripIndents } from 'common-tags';
+import { CronJob } from 'cron';
 
 import logger, { getLogTag } from './helpers/logger';
 import { CMD_PREFIX, CMD_GROUPS, DISCORD_BOT_TOKEN } from './helpers/constants';
 
 // Event handlers
-import autoAuth from './eventHandlers/autoAuth';
-import updateServerCountActivity from './eventHandlers/updateServerCountActivity';
+import autoAuth from './tasks/autoAuth';
+import updateServerCountActivity from './tasks/updateServerCountActivity';
 import {
   updateHomepageMemberCounts,
-  UPDATE_INTERVAL,
-} from './eventHandlers/updateHomepageMemberCounts';
-import removeGuildFromGDN from './eventHandlers/removeGuildFromGDN';
+} from './tasks/updateHomepageMemberCounts';
+import removeGuildFromGDN from './tasks/removeGuildFromGDN';
+import syncSAPermabans from './tasks/syncSAPermabans';
+import leaveIdleServers from './tasks/leaveIdleServers';
 
 dotenv.config();
 
@@ -84,8 +86,6 @@ bot.once('ready', () => {
 
   // Update bot activity to reflect number of guilds
   updateServerCountActivity(tag, bot);
-  // Update homepage server counts on boot
-  updateHomepageMemberCounts(bot);
 });
 
 // Handle errors
@@ -104,7 +104,7 @@ bot.on('error', (err) => {
 
 // When the bot joins a Guild
 bot.on('guildCreate', (guild: Guild) => {
-  const tag = getLogTag(SnowflakeUtil.generate());
+  const tag = getLogTag();
 
   logger.info(`Joined guild ${guild.name} (${guild.id})`);
   updateServerCountActivity(tag, bot);
@@ -112,7 +112,7 @@ bot.on('guildCreate', (guild: Guild) => {
 
 // When the bot leaves a Guild
 bot.on('guildDelete', (guild: Guild) => {
-  const tag = getLogTag(SnowflakeUtil.generate());
+  const tag = getLogTag();
 
   logger.info(tag, `Left guild ${guild.name} (${guild.id})`);
 
@@ -127,13 +127,39 @@ bot.on('commandError', (command: Command, err: Error, message: CommandoMessage) 
   message.channel.stopTyping();
 });
 
-// Update server member counts on the GDN Homepage
-bot.setInterval(
-  () => {
-    updateHomepageMemberCounts(bot);
-  },
-  UPDATE_INTERVAL,
-);
-
 // Start the bot
 bot.login(DISCORD_BOT_TOKEN);
+
+/**
+ * SCHEDULED ADMINISTRATIVE TASKS
+ */
+
+/*
+ * Remove bot from idle servers (ones not enrolled in GDN)
+ * Current execution time: Daily @ 12:05am
+ */
+const jobLeaveIdleServers = new CronJob('5 0 * * *', function () {
+  const tag = getLogTag();
+  leaveIdleServers(tag, bot);
+}, undefined, false, 'America/Los_Angeles');
+jobLeaveIdleServers.start();
+
+/*
+ * Update homepage member counts
+ * Current execution time: Daily @ 12:10am
+ */
+const jobUpdateHomepage = new CronJob('10 0 * * *', function () {
+  const tag = getLogTag();
+  updateHomepageMemberCounts(tag, bot);
+}, undefined, false, 'America/Los_Angeles');
+jobUpdateHomepage.start();
+
+/**
+ * Update blacklist with last month's permabans
+ * Current execution time: Monthly on the 1st @ 12:15am
+ */
+const jobPermabanSync = new CronJob('15 0 1 * *', function () {
+  const tag = getLogTag();
+  syncSAPermabans(tag);
+}, undefined, false, 'America/Los_Angeles');
+jobPermabanSync.start();

@@ -45,6 +45,8 @@ export const axiosGDN = axios.create({
 
 export const GDN_URLS = {
   MEMBERS: '/gdn/members',
+  MEMBERS_BLACKLISTED: '/gdn/members/blacklisted',
   GUILDS: '/gdn/servers',
   SA: '/gdn/sa',
+  PERMABAN: '/gdn/sa/permabansync',
 };

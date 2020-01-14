@@ -1,7 +1,7 @@
-import { SnowflakeUtil, Collection, GuildMember } from 'discord.js';
+import { Collection, GuildMember } from 'discord.js';
 import { CommandoClient } from 'discord.js-commando';
 
-import logger, { getLogTag } from '../helpers/logger';
+import logger, { LogTag } from '../helpers/logger';
 import { axiosGDN, GDN_URLS, APIGuild } from '../helpers/axiosGDN';
 import roundDown from '../helpers/roundDown';
 
@@ -9,14 +9,8 @@ interface GuildsMap {
   [guildId: string]: APIGuild;
 }
 
-export const UPDATE_INTERVAL = 1000 * 60 * 60 * 24; // 24 Hours
-
-export async function updateHomepageMemberCounts (bot: CommandoClient) {
-  // Generate a logger tag
-  const eventId = SnowflakeUtil.generate();
-  const tag = getLogTag(eventId);
-
-  logger.info(tag, '[Updating member counts]');
+export async function updateHomepageMemberCounts (tag: LogTag, bot: CommandoClient) {
+  logger.info(tag, '[TASK START] Updating homepage member counts');
 
   try {
     // Get the list of enrolled servers from the back end

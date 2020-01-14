@@ -1,5 +1,7 @@
+/* eslint-disable camelcase */
 import bunyan from 'bunyan';
 import bsyslog from 'bunyan-syslog';
+import { SnowflakeUtil } from 'discord.js';
 
 import {
   NODE_ENV,
@@ -69,12 +71,20 @@ logger.on('error', (err) => {
  * A helper method to generate an object that can be used to tag logged messages generated from
  * a singular "request". This will help with troubleshooting sequences events by allowing for
  * filtering on this particular, consistent ID.
- *
- * @param {string|number} id - Typically `message.id`
- * @returns {object}
  */
-export function getLogTag (id: string): LogTag {
-  return { req_id: id };
+export function getLogTag (id?: string): LogTag {
+  let req_id;
+
+  if (id) {
+    // If an ID is provided then use that
+    req_id = id;
+  } else {
+    // Otherwise generate a snowflake as an ID
+    // See https://discordapp.com/developers/docs/reference#snowflakes
+    req_id = SnowflakeUtil.generate();
+  }
+
+  return { req_id };
 }
 
 export default logger;

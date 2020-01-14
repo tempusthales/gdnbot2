@@ -19,13 +19,13 @@ export interface GuildEnrolled {
  * Check to see if a guild is enrolled in Goon Discord Network
  */
 export default async function hasGuildEnrolled (tag: LogTag, guild: Guild): Promise<GuildEnrolled> {
-  logger.info(tag, 'Checking if guild has enrolled in GDN');
+  logger.info(tag, `Checking if ${guild.name} (${guild.id}) has enrolled in GDN`);
 
   try {
     // Not erroring out here means the server is in GDN
     const { data } = await axiosGDN.get<APIGuild>(`${GDN_URLS.GUILDS}/${guild.id}`);
 
-    logger.info(tag, 'Server is enrolled in GDN, continuing');
+    logger.info(tag, 'Guild is enrolled in GDN, continuing');
 
     return {
       isEnrolled: true,
@@ -36,13 +36,13 @@ export default async function hasGuildEnrolled (tag: LogTag, guild: Guild): Prom
     const { response } = err;
 
     if (response?.status === 404) {
-      logger.info(tag, '...but no server info was found, exiting');
+      logger.info(tag, '...but no guild info was found, exiting');
       return {
         isEnrolled: false,
         reason: reasonNotEnrolled,
       };
     } else {
-      logger.error({ ...tag, err }, 'Error checking for server info, exiting');
+      logger.error({ ...tag, err }, 'Error checking for guild info, exiting');
       throw err;
     }
   }
