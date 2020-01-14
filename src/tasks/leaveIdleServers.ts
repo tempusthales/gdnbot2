@@ -29,9 +29,10 @@ export default async function leaveIdleServers (tag: LogTag, bot: CommandoClient
 
   // Remove the bot from servers it's idling in
   idlingIn.forEach((guild: Guild) => {
-    logger.info(tag, `Calculating idle duration for ${guild.name} (${guild.id})`);
+    const { id, name, joinedAt } = guild;
 
-    const { joinedAt } = guild;
+    logger.info(tag, `Calculating idle duration for ${name} (${id})`);
+
     const joined = DateTime.fromJSDate(joinedAt);
     // `.diffNow()` will return a negative number since `joined` will be in the past
     const numDays = joined.diffNow('days').days * -1;
@@ -39,7 +40,7 @@ export default async function leaveIdleServers (tag: LogTag, bot: CommandoClient
     logger.info(tag, `Bot has been idling for ${numDays} of ${MAX_IDLE_DAYS} days`);
 
     if (numDays >= MAX_IDLE_DAYS) {
-      logger.info(tag, `Leaving idle guild ${guild.name} (${guild.id})`);
+      logger.info(tag, `Leaving idle guild ${name} (${id})`);
       guild
         .leave()
         .catch((err) => logger.error({ ...tag, err }, 'Error leaving guild'));
