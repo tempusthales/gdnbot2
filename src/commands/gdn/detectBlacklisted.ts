@@ -113,8 +113,8 @@ export default class DetectBlacklistedCommand extends GDNCommand {
         member => `**${member.user.tag}** (${member.id})`,
       ))
       .addField('Tips', `${oneLine`_
-        If you wish to take action against these users, you can **right-click > Kick/Ban** any of
-        the names above.
+        You can **Copy > Paste** a username above into **Server Settings > Members** to quickly
+        identify that member within this guild.
       _`}`);
 
     return message.embed(embed);
