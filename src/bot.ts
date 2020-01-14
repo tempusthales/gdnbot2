@@ -131,32 +131,35 @@ bot.on('commandError', (command: Command, err: Error, message: CommandoMessage) 
 bot.login(DISCORD_BOT_TOKEN);
 
 /**
- * Daily administrative tasks
- *
- * Current execution time: 12:05am
+ * SCHEDULED ADMINISTRATIVE TASKS
  */
-const jobDailyTasks = new CronJob('5 0 * * *', function () {
+
+/*
+ * Remove bot from idle servers (ones not enrolled in GDN)
+ * Current execution time: Daily @ 12:05am
+ */
+const jobLeaveIdleServers = new CronJob('5 0 * * *', function () {
   const tag = getLogTag();
-  logger.info(tag, 'Executing daily tasks');
-
-  // Remove bot from idle servers (ones not enrolled in GDN)
   leaveIdleServers(tag, bot);
+}, undefined, false, 'America/Los_Angeles');
+jobLeaveIdleServers.start();
 
-  // Update homepage member counts
+/*
+ * Update homepage member counts
+ * Current execution time: Daily @ 12:10am
+ */
+const jobUpdateHomepage = new CronJob('10 0 * * *', function () {
+  const tag = getLogTag();
   updateHomepageMemberCounts(tag, bot);
 }, undefined, false, 'America/Los_Angeles');
-jobDailyTasks.start();
+jobUpdateHomepage.start();
 
 /**
- * Monthly administrative tasks
- *
- * Current execution time: 1st of the month @ 12:10am
+ * Update blacklist with last month's permabans
+ * Current execution time: Monthly on the 1st @ 12:15am
  */
-const jobMonthlyTasks = new CronJob('10 0 1 * *', function () {
+const jobPermabanSync = new CronJob('15 0 1 * *', function () {
   const tag = getLogTag();
-  logger.info(tag, 'Executing monthly tasks');
-
-  // Update blacklist with last month's permabans
   syncSAPermabans(tag);
 }, undefined, false, 'America/Los_Angeles');
-jobMonthlyTasks.start();
+jobPermabanSync.start();
