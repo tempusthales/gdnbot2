@@ -32,6 +32,7 @@ export enum CMD_NAMES {
   GDN_ENROLL = 'gdn-enroll',
   GDN_UPDATE = 'gdn-update',
   GDN_ENABLE_AUTHME = 'gdn-enable-authme',
+  GDN_DETECT_BLACKLISTED = 'gdn-detect',
   PUBLIC_TOGGLE_ROLE = 'toggle-role',
 }
 
