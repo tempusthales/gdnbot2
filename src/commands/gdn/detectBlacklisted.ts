@@ -91,12 +91,12 @@ export default class DetectBlacklistedCommand extends GDNCommand {
       return message.say('No blacklisted users were detected in this guild');
     }
 
-    const matchingString = matching.array().join(', ');
+    const matchingString = matching.array();
 
     logger.info(
       {
         ...tag,
-        matching: matchingString,
+        matching: matchingString.join(', '),
       },
       `Found ${matching.size} blacklisted member(s) in this guild`,
     );
@@ -109,7 +109,9 @@ export default class DetectBlacklistedCommand extends GDNCommand {
       .setDescription(oneLine`
         The following **${matching.size} Discord member(s)** in your guild are blacklisted in GDN:
       `)
-      .addField('Matching Guild Members', matchingString)
+      .addField('Matching Guild Members', matchingString.map(
+        member => `**${member.user.tag}** (${member.id})`,
+      ))
       .addField('Tips', `${oneLine`_
         If you wish to take action against these users, you can **right-click > Kick/Ban** any of
         the names above.
