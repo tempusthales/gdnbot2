@@ -55,6 +55,9 @@ export default class DetectBlacklistedCommand extends GDNCommand {
       throw new Error('Server is enrolled, but no server data is available');
     }
 
+    /**
+     * Request a list of all blacklisted IDs
+     */
     let blacklistedIDs: string[] = [];
     try {
       logger.info(tag, 'Retrieving blacklisted Discord members');
@@ -75,7 +78,9 @@ export default class DetectBlacklistedCommand extends GDNCommand {
       mappedBlacklisted[id] = true;
     });
 
-    // Filter guild members to just those who are blacklisted
+    /**
+     * Filter guild members to just those who are blacklisted
+     */
     const matching = guild.members.filter(
       (member: GuildMember) => !!mappedBlacklisted[member.id],
     );
@@ -96,6 +101,9 @@ export default class DetectBlacklistedCommand extends GDNCommand {
       `Found ${matching.size} blacklisted member(s) in this guild`,
     );
 
+    /**
+     * Send formatted list of matching users
+     */
     const embed = new GDNEmbed()
       .setTitle(`GDN Blacklist Check for ${guild.name}`)
       .setDescription(oneLine`
