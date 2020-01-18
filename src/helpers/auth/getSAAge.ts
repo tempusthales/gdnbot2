@@ -32,8 +32,8 @@ export default async function getSAAge (tag: LogTag, profile: CheerioStatic): Pr
     return {
       age: undefined,
       reason: oneLine`
-        I could not find a reg date on the SA profile page for the username you provided. The bot
-        owner has been notified. Thank you for your patience while they get this fixed!
+        I could not find a reg date on your SA profile page. The bot owner has been notified. Thank
+        you for your patience while they get this fixed!
       `,
     };
   }
