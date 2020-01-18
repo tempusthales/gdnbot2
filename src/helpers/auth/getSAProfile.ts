@@ -17,10 +17,19 @@ const reasonErrorLoadingProfile = oneLine`
 /**
  * Grab the user's SA Profile page and wrap it in Cheerio
  */
-export default async function getSAProfile (tag: LogTag, username: string): Promise<SAProfile> {
-  logger.info(tag, 'Retrieving SA profile page');
-
-  const url = `${SA_URLS.PROFILE}${encodeURIComponent(username)}`;
+export default async function getSAProfile (
+  tag: LogTag,
+  username?: string,
+  userID?: string,
+): Promise<SAProfile> {
+  let url = SA_URLS.PROFILE;
+  if (username) {
+    logger.info(tag, `Retrieving SA profile page by username: "${username}"`);
+    url += `&username=${encodeURIComponent(username)}`;
+  } else if (userID) {
+    logger.info(tag, `Retrieving SA profile page by user ID: ${userID}`);
+    url += `&userid=${encodeURIComponent(userID)}`;
+  }
 
   try {
     // Request HTML
