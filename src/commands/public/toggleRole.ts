@@ -17,6 +17,8 @@ interface RoleArgs {
 export default class SetDescriptionCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
+      // Prevent others from using this for now
+      ownerOnly: true,
       name: CMD_NAMES.PUBLIC_TOGGLE_ROLE,
       group: CMD_GROUPS.PUBLIC,
       memberName: 'toggle_role',

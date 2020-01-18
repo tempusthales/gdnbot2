@@ -20,5 +20,5 @@ export const axiosSA = axios.create({
 });
 
 export const SA_URLS = {
-  PROFILE: 'http://forums.somethingawful.com/member.php?action=getinfo&username=',
+  PROFILE: 'http://forums.somethingawful.com/member.php?action=getinfo',
 };

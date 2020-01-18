@@ -13,7 +13,8 @@ services:
       - SESSION_HASH
       - BBUSER_ID
       - BBPASSWORD
-      - MIN_ACCOUNT_AGE_DAYS
+      - AUTH_MIN_ACCOUNT_AGE_DAYS
+      - ENROLL_MIN_ACCOUNT_AGE_DAYS
       - MAX_IDLE_DAYS
     volumes:
       # Preserve the settings database on the host filesystem

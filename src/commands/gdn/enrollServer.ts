@@ -9,8 +9,10 @@ import { axiosGDN, GDN_URLS, APIGuild } from '../../helpers/axiosGDN';
 import getServerInfoCollector, { ServerInfoArgs } from '../../helpers/gdn/getServerInfoCollector';
 import truncateServerDescription from '../../helpers/gdn/truncateServerDescription';
 import { inviteCodeToInviteURL } from '../../helpers/gdn/guildInvites';
-import { CMD_GROUPS, CMD_NAMES } from '../../helpers/constants';
+import { CMD_GROUPS, CMD_NAMES, ENROLL_MIN_ACCOUNT_AGE_DAYS } from '../../helpers/constants';
 import logCommandStart from '../../helpers/logCommandStart';
+import getSAProfile from '../../helpers/auth/getSAProfile';
+import getSAAge from '../../helpers/auth/getSAAge';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 import hasMemberAuthed from '../../checks/hasMemberAuthed';
@@ -176,10 +178,41 @@ export default class ListCommand extends GDNCommand {
     }
 
     /**
-     * Submit details to API
+     * Get SA profile for analysis
      */
     message.channel.startTyping();
+    const { profile, reason: reasonErrorProfileLoad } = await getSAProfile(
+      tag,
+      undefined,
+      memberData.sa_id,
+    );
 
+    if (!profile) {
+      message.channel.stopTyping();
+      return message.reply(reasonErrorProfileLoad);
+    }
+
+    /**
+     * CALCULATING ACCOUNT AGE FROM USER PROFILE
+     */
+    const { age, reason: reasonNoRegDate } = await getSAAge(tag, profile);
+
+    if (age === undefined) {
+      message.channel.stopTyping();
+      return message.reply(reasonNoRegDate);
+    }
+
+    if (age < ENROLL_MIN_ACCOUNT_AGE_DAYS) {
+      logger.info(tag, 'User account age in days is below minimum, exiting');
+      message.channel.stopTyping();
+      return message.reply(oneLine`
+        your SA account is not old enough to complete this command. Please try again later.
+      `);
+    }
+
+    /**
+     * Submit details to API
+     */
     logger.info({ ...tag, details }, 'Submitting server to GDN API');
 
     try {
