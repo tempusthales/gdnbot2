@@ -6,7 +6,12 @@ import { stripIndents, oneLine } from 'common-tags';
 import GDNCommand from '../../helpers/GDNCommand';
 import logger, { getLogTag } from '../../helpers/logger';
 import cleanupMessages from '../../helpers/cleanupMessages';
-import { CMD_GROUPS, CMD_NAMES, API_ERROR, MIN_ACCOUNT_AGE_DAYS } from '../../helpers/constants';
+import {
+  CMD_GROUPS,
+  CMD_NAMES,
+  API_ERROR,
+  AUTH_MIN_ACCOUNT_AGE_DAYS,
+} from '../../helpers/constants';
 
 // Checks
 import isMemberBlacklisted from '../../checks/isMemberBlacklisted';
@@ -212,10 +217,11 @@ export default class AuthmeCommand extends GDNCommand {
       return member.send(reasonNoRegDate);
     }
 
-    if (age < MIN_ACCOUNT_AGE_DAYS) {
+    if (age < AUTH_MIN_ACCOUNT_AGE_DAYS) {
       logger.info(tag, 'User account age in days is below minimum, exiting');
       return member.send(oneLine`
-        Your SA account must be at least ${MIN_ACCOUNT_AGE_DAYS} days old. Please try again later.
+        Your SA account must be at least ${AUTH_MIN_ACCOUNT_AGE_DAYS} days old. Please try again
+        later.
       `);
     }
 
