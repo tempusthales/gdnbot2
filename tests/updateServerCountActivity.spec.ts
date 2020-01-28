@@ -1,6 +1,6 @@
 import { CommandoClient } from 'discord.js-commando';
 
-import updateServerCountActivity from '../src/eventHandlers/updateServerCountActivity';
+import updateServerCountActivity from '../src/tasks/updateServerCountActivity';
 
 // jest.unmock('../src/helpers/logger');
 import logger, { getLogTag } from '../src/helpers/logger';

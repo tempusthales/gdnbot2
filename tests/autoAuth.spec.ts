@@ -2,7 +2,7 @@
 import moxios from 'moxios';
 import { SnowflakeUtil, GuildMember, TextChannel } from 'discord.js';
 
-import autoAuth from '../src/eventHandlers/autoAuth';
+import autoAuth from '../src/tasks/autoAuth';
 
 /**
  * User synchronous timeouts
