@@ -17,7 +17,7 @@ import updateServerCountActivity from './tasks/updateServerCountActivity';
 import {
   updateHomepageMemberCounts,
 } from './tasks/updateHomepageMemberCounts';
-import removeGuildFromGDN from './tasks/removeGuildFromGDN';
+// import removeGuildFromGDN from './tasks/removeGuildFromGDN';
 import syncSAPermabans from './tasks/syncSAPermabans';
 import leaveIdleServers from './tasks/leaveIdleServers';
 
@@ -106,7 +106,7 @@ bot.on('error', (err) => {
 bot.on('guildCreate', (guild: Guild) => {
   const tag = getLogTag();
 
-  logger.info(`Joined guild ${guild.name} (${guild.id})`);
+  logger.info(tag, `Joined guild ${guild.name} (${guild.id})`);
   updateServerCountActivity(tag, bot);
 });
 
@@ -117,7 +117,9 @@ bot.on('guildDelete', (guild: Guild) => {
   logger.info(tag, `Left guild ${guild.name} (${guild.id})`);
 
   updateServerCountActivity(tag, bot);
-  removeGuildFromGDN(tag, guild);
+  // Temporarily disable this since Discord is doing some kind of netsplit that's
+  // errantly causing this bot to delete servers from GDN
+  // removeGuildFromGDN(tag, guild);
 });
 
 // When a Member joins a Guild
