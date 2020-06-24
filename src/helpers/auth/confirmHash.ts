@@ -11,7 +11,7 @@ interface ConfirmedHash {
 
 function reasonNotValidated (username: string): string {
   return oneLine`
-    Lowtax is disappointed in you. Enter **!authme ${username}** back in the server to try again
+    The hash could not be found. Enter **!authme ${username}** back in the server to try again
     :getout:
   `;
 }

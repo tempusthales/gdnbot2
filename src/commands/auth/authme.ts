@@ -134,7 +134,7 @@ export default class AuthmeCommand extends GDNCommand {
         **${hash}**
 
         ${oneLine`
-          After you've completed this, return **here** and respond with **Praise Lowtax** to verify
+          After you've completed this, return **here** and respond with **done** to verify
           your SA membership.
         `}
       `);
@@ -170,7 +170,7 @@ export default class AuthmeCommand extends GDNCommand {
     cleanupMessages([hashMessage]);
 
     if (confirmation.cancelled) {
-      logger.warn(tag, 'User did not praise Lowtax, exiting');
+      logger.warn(tag, 'User did not confirm hash placement, exiting');
 
       return member.send(oneLine`
         You have not been authenticated. Please feel free to try again back in **${guild.name}**.
