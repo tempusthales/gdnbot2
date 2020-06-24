@@ -432,37 +432,6 @@ test('logs message when an invalid log channel is specified for auth success mes
   expect(logger.info).toHaveBeenCalledWith({ req_id: message.id }, 'No text channel found by that ID');
 });
 
-test('messages user to try again when they fail to praise lowtax', async () => {
-  // Guild is enrolled in GDN
-  moxios.stubRequest(GDN_GUILD, {
-    status: 200,
-    response: {
-      validated_role_id: roleID,
-      logging_channel_id: channelID,
-    },
-  });
-
-  // Member has never authed before
-  moxios.stubRequest(GDN_MEMBER, {
-    status: 404,
-  });
-
-  // GoonAuth generates hash for user
-  moxios.stubRequest(GAUTH_GET, {
-    status: 200,
-    response: {
-      hash: 'abc',
-    },
-  });
-
-  // User responds with "done"
-  userDM.awaitMessages.mockRejectedValue([]);
-
-  await authme.run(message, { username: saUsername });
-
-  expect(member.send).toHaveBeenLastCalledWith(`You have not been authenticated. Please feel free to try again back in **${guild.name}**.`);
-});
-
 test('messages user when hash could not be confirmed in their profile', async () => {
   // Guild is enrolled in GDN
   moxios.stubRequest(GDN_GUILD, {
