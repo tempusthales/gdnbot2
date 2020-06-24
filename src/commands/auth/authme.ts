@@ -18,7 +18,7 @@ import isMemberBlacklisted from '../../checks/isMemberBlacklisted';
 
 // Auth helpers
 import startAuthCheck from '../../helpers/auth/startAuthCheck';
-import praiseLowtaxCollector from '../../helpers/auth/praiseLowtaxCollector';
+import confirmHashPlacementCollector from '../../helpers/auth/confirmHashPlacementCollector';
 
 // Auth actions
 import getHash from '../../helpers/auth/getHash';
@@ -134,7 +134,7 @@ export default class AuthmeCommand extends GDNCommand {
         **${hash}**
 
         ${oneLine`
-          After you've completed this, return **here** and respond with **Praise Lowtax** to verify
+          After you've completed this, return **here** and respond with **done** to verify
           your SA membership.
         `}
       `);
@@ -164,13 +164,13 @@ export default class AuthmeCommand extends GDNCommand {
      */
     logger.info(tag, 'Awaiting response from member');
 
-    const confirmation = await praiseLowtaxCollector((hashMessage.channel as DMChannel));
+    const confirmation = await confirmHashPlacementCollector((hashMessage.channel as DMChannel));
 
     // We're done with the hash, so remove it
     cleanupMessages([hashMessage]);
 
     if (confirmation.cancelled) {
-      logger.warn(tag, 'User did not praise Lowtax, exiting');
+      logger.warn(tag, 'User did not confirm hash placement, exiting');
 
       return member.send(oneLine`
         You have not been authenticated. Please feel free to try again back in **${guild.name}**.
