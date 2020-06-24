@@ -60,16 +60,20 @@ const guild = {
   id: guildID,
   name: 'Test Guild',
   roles: {
-    get () { return _guildRoles; },
-    set () {},
     fetch: jest.fn().mockImplementation(
       (_id) => Promise.resolve(_id === roleID ? _guildRoles[0] : null),
     ),
+    cache: {
+      get () { return _guildRoles; },
+      set () {},
+    },
   },
   channels: {
-    get: jest.fn().mockImplementation(
-      (_id) => _id === channelID ? _guildChannels[0] : null,
-    ),
+    cache: {
+      get: jest.fn().mockImplementation(
+        (_id) => _id === channelID ? _guildChannels[0] : null,
+      ),
+    },
   },
 };
 
@@ -80,6 +84,8 @@ const message = {
   member,
   say: jest.fn(),
   reply: jest.fn(),
+  client: { commandPrefix: '!' },
+  command: { name: 'authme' },
 } as unknown as CommandoMessage;
 
 // Good Profile
