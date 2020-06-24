@@ -18,7 +18,7 @@ import isMemberBlacklisted from '../../checks/isMemberBlacklisted';
 
 // Auth helpers
 import startAuthCheck from '../../helpers/auth/startAuthCheck';
-import praiseLowtaxCollector from '../../helpers/auth/praiseLowtaxCollector';
+import confirmHashPlacementCollector from '../../helpers/auth/confirmHashPlacementCollector';
 
 // Auth actions
 import getHash from '../../helpers/auth/getHash';
@@ -164,7 +164,7 @@ export default class AuthmeCommand extends GDNCommand {
      */
     logger.info(tag, 'Awaiting response from member');
 
-    const confirmation = await praiseLowtaxCollector((hashMessage.channel as DMChannel));
+    const confirmation = await confirmHashPlacementCollector((hashMessage.channel as DMChannel));
 
     // We're done with the hash, so remove it
     cleanupMessages([hashMessage]);
