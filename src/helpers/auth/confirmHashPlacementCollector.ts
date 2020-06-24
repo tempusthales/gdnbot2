@@ -4,7 +4,7 @@ interface CollectorResults {
   cancelled: boolean;
 }
 
-const filter: CollectorFilter = text => text.content.toLowerCase() === 'praise lowtax';
+const filter: CollectorFilter = text => text.content.length > 0;
 const collectorOptions: AwaitMessagesOptions = {
   max: 1,
   maxProcessed: 3,
@@ -14,11 +14,10 @@ const collectorOptions: AwaitMessagesOptions = {
 };
 
 /**
- * A collector specifically for requesting the user to type 'praise lowtax' after
- * adding the auth hash to their SA profile. This should trigger the verification step of the
- * authme process.
+ * A collector specifically for requesting the user to confirm they've placed the auth hash in
+ * their SA profile. This should trigger the verification step of the authme process.
  */
-export default async function praiseLowtaxCollector (
+export default async function confirmHashPlacementCollector (
   channel: DMChannel,
 ): Promise<CollectorResults> {
   return channel.awaitMessages(filter, collectorOptions)

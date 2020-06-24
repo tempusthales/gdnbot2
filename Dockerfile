@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 
 # Install dependencies
 COPY package*.json tsconfig.json ./
-RUN npm install
+RUN npm ci
 
 # Copy source files
 COPY src/ ./src/

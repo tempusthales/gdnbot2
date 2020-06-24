@@ -220,8 +220,8 @@ test('[HAPPY PATH] adds role to user that has never authed before', async () => 
     },
   });
 
-  // User responds with "praise lowtax"
-  userDM.awaitMessages.mockResolvedValue([]);
+  // User responds with "done"
+  userDM.awaitMessages.mockResolvedValue(['done']);
 
   // GoonAuth is able to find hash in SA profile
   moxios.stubRequest(GAUTH_CONFIRM, {
@@ -432,37 +432,6 @@ test('logs message when an invalid log channel is specified for auth success mes
   expect(logger.info).toHaveBeenCalledWith({ req_id: message.id }, 'No text channel found by that ID');
 });
 
-test('messages user to try again when they fail to praise lowtax', async () => {
-  // Guild is enrolled in GDN
-  moxios.stubRequest(GDN_GUILD, {
-    status: 200,
-    response: {
-      validated_role_id: roleID,
-      logging_channel_id: channelID,
-    },
-  });
-
-  // Member has never authed before
-  moxios.stubRequest(GDN_MEMBER, {
-    status: 404,
-  });
-
-  // GoonAuth generates hash for user
-  moxios.stubRequest(GAUTH_GET, {
-    status: 200,
-    response: {
-      hash: 'abc',
-    },
-  });
-
-  // User responds with "praise lowtax"
-  userDM.awaitMessages.mockRejectedValue([]);
-
-  await authme.run(message, { username: saUsername });
-
-  expect(member.send).toHaveBeenLastCalledWith(`You have not been authenticated. Please feel free to try again back in **${guild.name}**.`);
-});
-
 test('messages user when hash could not be confirmed in their profile', async () => {
   // Guild is enrolled in GDN
   moxios.stubRequest(GDN_GUILD, {
@@ -486,8 +455,8 @@ test('messages user when hash could not be confirmed in their profile', async ()
     },
   });
 
-  // User responds with "praise lowtax"
-  userDM.awaitMessages.mockResolvedValue([]);
+  // User responds with "done"
+  userDM.awaitMessages.mockResolvedValue(['done']);
 
   // GoonAuth is able to find hash in SA profile
   moxios.stubRequest(GAUTH_CONFIRM, {
@@ -499,7 +468,7 @@ test('messages user when hash could not be confirmed in their profile', async ()
 
   await authme.run(message, { username: saUsername });
 
-  expect(member.send).toHaveBeenLastCalledWith(`Lowtax is disappointed in you. Enter **!authme ${saUsername}** back in the server to try again :getout:`);
+  expect(member.send).toHaveBeenLastCalledWith(`The hash could not be found. Enter **!authme ${saUsername}** back in the server to try again :getout:`);
 });
 
 test('messages user that an error occurred when an unexpected hash request response is returned', async () => {
@@ -550,8 +519,8 @@ test('messages user that an error occurred when an unexpected hash confirmation 
     },
   });
 
-  // User responds with "praise lowtax"
-  userDM.awaitMessages.mockResolvedValue([]);
+  // User responds with "done"
+  userDM.awaitMessages.mockResolvedValue(['done']);
 
   // GoonAuth is able to find hash in SA profile
   moxios.stubRequest(GAUTH_CONFIRM, {
@@ -586,8 +555,8 @@ test('messages user and logs error when an SA ID could not be retrieved for thei
     },
   });
 
-  // User responds with "praise lowtax"
-  userDM.awaitMessages.mockResolvedValue([]);
+  // User responds with "done"
+  userDM.awaitMessages.mockResolvedValue(['done']);
 
   // GoonAuth is able to find hash in SA profile
   moxios.stubRequest(GAUTH_CONFIRM, {
@@ -632,8 +601,8 @@ test('messages channel that member is blacklisted when their SA ID is linked to 
     },
   });
 
-  // User responds with "praise lowtax"
-  userDM.awaitMessages.mockResolvedValue([]);
+  // User responds with "done"
+  userDM.awaitMessages.mockResolvedValue(['done']);
 
   // GoonAuth is able to find hash in SA profile
   moxios.stubRequest(GAUTH_CONFIRM, {
@@ -706,8 +675,8 @@ test('messages channel when user post count is too low', async () => {
     },
   });
 
-  // User responds with "praise lowtax"
-  userDM.awaitMessages.mockResolvedValue([]);
+  // User responds with "done"
+  userDM.awaitMessages.mockResolvedValue(['done']);
 
   // GoonAuth is able to find hash in SA profile
   moxios.stubRequest(GAUTH_CONFIRM, {
@@ -751,8 +720,8 @@ test('messages user and logs error when an error occurs while retrieving SA prof
     },
   });
 
-  // User responds with "praise lowtax"
-  userDM.awaitMessages.mockResolvedValue([]);
+  // User responds with "done"
+  userDM.awaitMessages.mockResolvedValue(['done']);
 
   // GoonAuth is able to find hash in SA profile
   moxios.stubRequest(GAUTH_CONFIRM, {
@@ -796,8 +765,8 @@ test('messages user when bot is unable to parse post count from profile', async 
     },
   });
 
-  // User responds with "praise lowtax"
-  userDM.awaitMessages.mockResolvedValue([]);
+  // User responds with "done"
+  userDM.awaitMessages.mockResolvedValue(['done']);
 
   // GoonAuth is able to find hash in SA profile
   moxios.stubRequest(GAUTH_CONFIRM, {
@@ -842,8 +811,8 @@ test('logs error when error occurs while adding user to database', async () => {
     },
   });
 
-  // User responds with "praise lowtax"
-  userDM.awaitMessages.mockResolvedValue([]);
+  // User responds with "done"
+  userDM.awaitMessages.mockResolvedValue(['done']);
 
   // GoonAuth is able to find hash in SA profile
   moxios.stubRequest(GAUTH_CONFIRM, {
@@ -897,8 +866,8 @@ test('logs error 50013 error occurs while assigning role to authed user', async 
     },
   });
 
-  // User responds with "praise lowtax"
-  userDM.awaitMessages.mockResolvedValue([]);
+  // User responds with "done"
+  userDM.awaitMessages.mockResolvedValue(['done']);
 
   // GoonAuth is able to find hash in SA profile
   moxios.stubRequest(GAUTH_CONFIRM, {
@@ -959,8 +928,8 @@ test('reports misconfiguration in channel when 50013 error occurs while assignin
     },
   });
 
-  // User responds with "praise lowtax"
-  userDM.awaitMessages.mockResolvedValue([]);
+  // User responds with "done"
+  userDM.awaitMessages.mockResolvedValue(['done']);
 
   // GoonAuth is able to find hash in SA profile
   moxios.stubRequest(GAUTH_CONFIRM, {
@@ -1024,8 +993,8 @@ test('logs error when 50013 error occurs while assigning role to authed user but
     },
   });
 
-  // User responds with "praise lowtax"
-  userDM.awaitMessages.mockResolvedValue([]);
+  // User responds with "done"
+  userDM.awaitMessages.mockResolvedValue(['done']);
 
   // GoonAuth is able to find hash in SA profile
   moxios.stubRequest(GAUTH_CONFIRM, {
