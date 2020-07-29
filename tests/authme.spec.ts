@@ -45,7 +45,11 @@ const member = {
   user: {
     tag: 'foobar',
   },
-  roles: [],
+  roles: {
+    cache: {
+      get: () => [],
+    },
+  },
   edit: jest.fn(),
   send: jest.fn().mockImplementation(() => ({
     channel: userDM,
@@ -105,6 +109,7 @@ const goodSAProfileHTML = oneLine`
           <i>Goon API</i> claims to be a porpoise.
         </p>
       </td>
+      <td><dd class="registered">Aug 28, 2008</td>
     </tr>
   </table>
   <input type="hidden" name="userid" value="${saID}" />
@@ -129,6 +134,7 @@ const badUserIDSAProfileHTML = oneLine`
           <i>Goon API</i> claims to be a porpoise.
         </p>
       </td>
+      <td><dd class="registered">Aug 28, 2008</td>
     </tr>
   </table>
   <input type="hidden" name="id" value="${saID}" />
@@ -153,6 +159,7 @@ const badPostCountSAProfileHTML = oneLine`
           <i>Goon API</i> claims to be a porpoise.
         </p>
       </td>
+      <td><dd class="registered">Aug 28, 2008</td>
     </tr>
   </table>
   <input type="hidden" name="userid" value="${saID}" />
@@ -181,6 +188,7 @@ const badChangedMarkupSAProfileHTML = oneLine`
           <i>Goon API</i> claims to be a porpoise.
         </p>
       </td>
+      <td><dd class="registered">Aug 28, 2008</td>
     </tr>
   </table>
   <input type="hidden" name="userid" value="${saID}" />
@@ -196,7 +204,7 @@ const GDN_DB = `${axiosGDN.defaults.baseURL}${GDN_URLS.MEMBERS}`;
 const GAUTH_GET = `${axiosGoonAuth.defaults.baseURL}/${GOON_AUTH_URLS.GET_HASH}`;
 const GAUTH_CONFIRM = `${axiosGoonAuth.defaults.baseURL}/${GOON_AUTH_URLS.CONFIRM_HASH}`;
 
-const SA_PROFILE = `${SA_URLS.PROFILE}${saUsername}`;
+const SA_PROFILE = `${SA_URLS.PROFILE}&username=${saUsername}`;
 
 const authme = new AuthmeCommand({} as unknown as CommandoClient);
 
@@ -255,7 +263,7 @@ test('[HAPPY PATH] adds role to user that has never authed before', async () => 
 
   await authme.run(message, { username: saUsername });
 
-  expect(member.edit).toHaveBeenCalledWith({ roles: [authRole] }, 'GDN: Successful Auth');
+  expect(member.roles.add).toHaveBeenCalledWith({ roles: [authRole] }, 'GDN: Successful Auth');
   expect(logChannel.send).toHaveBeenCalledWith(`${member.user} (SA: ${saUsername}) successfully authed`);
 });
 
@@ -287,7 +295,7 @@ test('skips hash check for user that has authed before and is not blacklisted', 
 
   await authme.run(message, { username: saUsername });
 
-  expect(member.edit).toHaveBeenCalledWith({ roles: [authRole] }, 'GDN: Successful Auth');
+  expect(member.roles.add).toHaveBeenCalledWith({ roles: [authRole] }, 'GDN: Successful Auth');
   expect(logChannel.send).toHaveBeenCalledWith(`${member.user} (SA: ${saUsername}) successfully authed`);
 });
 
@@ -899,7 +907,7 @@ test('logs error 50013 error occurs while assigning role to authed user', async 
     status: 200,
   });
 
-  message.member.edit = jest.fn().mockImplementation(() => {
+  message.member.roles.add = jest.fn().mockImplementation(() => {
     throw new HTTPError('API Error could not add role to user', 'Error', 50013, 'PUT', '/userroles');
   });
 
@@ -961,7 +969,7 @@ test('reports misconfiguration in channel when 50013 error occurs while assignin
     status: 200,
   });
 
-  message.member.edit = jest.fn().mockImplementation(() => {
+  message.member.roles.add = jest.fn().mockImplementation(() => {
     throw new HTTPError('API Error could not add role to user', 'Error', 50013, 'PUT', '/userroles');
   });
 
@@ -1010,6 +1018,8 @@ test('logs error when 50013 error occurs while assigning role to authed user but
     },
   });
 
+  console.log(SA_PROFILE);
+
   // SA username returns a valid SA profile
   moxios.stubRequest(SA_PROFILE, {
     status: 200,
@@ -1026,7 +1036,7 @@ test('logs error when 50013 error occurs while assigning role to authed user but
     status: 200,
   });
 
-  message.member.edit = jest.fn().mockImplementation(() => {
+  message.member.roles.add = jest.fn().mockImplementation(() => {
     throw new HTTPError('API Error could not add role to user', 'Error', 50013, 'PUT', '/userroles');
   });
 
